@@ -44,3 +44,58 @@ void cadastrarCliente() {
 
     printf("Cliente cadastrado com sucesso.\n");
 }
+
+Cliente* buscarCliente(int numeroCliente) {
+    int i;
+    for (i = 0; i < numClientes; i++) {
+        if (clientes[i].numeroCliente == numeroCliente) {
+            return &clientes[i];
+        }
+    }
+    return NULL;
+}
+
+void cadastrarContaCliente() {
+    int numeroCliente;
+    printf("Digite o número do cliente: ");
+    scanf("%d", &numeroCliente);
+
+    Cliente* cliente = buscarCliente(numeroCliente);
+
+    if (cliente == NULL) {
+        printf("Cliente não encontrado.\n");
+        return;
+    }
+
+    printf("Digite o número da conta: ");
+    scanf("%d", &cliente->conta.numeroConta);
+
+    cliente->conta.saldo = 0.0;
+
+    printf("Conta cadastrada com sucesso.\n");
+}
+
+void realizarSaque() {
+    int numeroCliente;
+    printf("Digite o número do cliente: ");
+    scanf("%d", &numeroCliente);
+
+    Cliente* cliente = buscarCliente(numeroCliente);
+
+    if (cliente == NULL) {
+        printf("Cliente não encontrado.\n");
+        return;
+    }
+
+    float valor;
+    printf("Digite o valor do saque: ");
+    scanf("%f", &valor);
+
+    if (cliente->conta.saldo < valor) {
+        printf("Saldo insuficiente.\n");
+        return;
+    }
+
+    cliente->conta.saldo -= valor;
+    printf("Saque realizado com sucesso. Saldo atual: %.2f\n", cliente->conta.saldo);
+}
