@@ -99,3 +99,40 @@ void realizarSaque() {
     cliente->conta.saldo -= valor;
     printf("Saque realizado com sucesso. Saldo atual: %.2f\n", cliente->conta.saldo);
 }
+
+void realizarDeposito() {
+    int numeroCliente;
+    printf("Digite o numero do cliente: ");
+    scanf("%d", &numeroCliente);
+
+    Cliente* cliente = buscarCliente(numeroCliente);
+
+    if (cliente == NULL) {
+        printf("Cliente nao encontrado.\n");
+        return;
+    }
+
+    float valor;
+    printf("Digite o valor do deposito: ");
+    scanf("%f", &valor);
+
+    cliente->conta.saldo += valor;
+    printf("Deposito realizado com sucesso. Saldo atual: %.2f\n", cliente->conta.saldo);
+}
+
+void consultarSaldo() {
+    int numeroCliente;
+    printf("Digite o numero do cliente: ");
+    scanf("%d", &numeroCliente);
+
+    Cliente* cliente = buscarCliente(numeroCliente);
+
+    if (cliente == NULL) {
+       
+
+ printf("Cliente nao encontrado.\n");
+        return;
+    }
+
+    printf("Saldo atual: %.2f\n", cliente->conta.saldo);
+}
