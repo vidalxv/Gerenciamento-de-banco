@@ -136,3 +136,97 @@ void consultarSaldo() {
 
     printf("Saldo atual: %.2f\n", cliente->conta.saldo);
 }
+void listarClientes() {
+    if (numClientes == 0) {
+        printf("Nenhum cliente cadastrado.\n");
+        return;
+    }
+
+    int i;
+    for (i = 0; i < numClientes; i++) {
+        printf("Número do cliente: %d\n", clientes[i].numeroCliente);
+        printf("Nome: %s\n", clientes[i].nome);
+        printf("Número da conta: %d\n", clientes[i].conta.numeroConta);
+        printf("Saldo: %.2f\n\n", clientes[i].conta.saldo);
+    }
+}
+
+void exibirExtrato() {
+    int numeroCliente;
+    printf("Digite o número do cliente: ");
+    scanf("%d", &numeroCliente);
+
+    Cliente* cliente = buscarCliente(numeroCliente);
+
+    if (cliente == NULL) {
+        printf("Cliente não encontrado.\n");
+        return;
+    }
+
+    printf("Extrato da conta do cliente %d:\n", cliente->numeroCliente);
+    printf("Saldo inicial: %.2f\n", cliente->conta.saldo);
+    printf("Operações realizadas:\n");
+    
+}
+
+int main() {
+	setlocale(LC_ALL, "portuguese");
+    int opcao;
+
+    do {
+    	system("cls");
+        printf("======== BancoShow ========\n");
+        printf("\n1. Cadastrar cliente");
+        printf("\n2. Cadastrar conta de cliente");
+        printf("\n3. Realizar saque");
+        printf("\n4. Realizar depósito");
+        printf("\n5. Consultar saldo");
+        printf("\n6. Listar clientes");
+        printf("\n7. Exibir extrato");
+        printf("\n8. Sair\n");
+        printf("\nDigite sua opção: ");
+        scanf("%d", &opcao);
+
+        switch (opcao) {
+            case 1:
+                cadastrarCliente();
+                system("pause");
+                break;
+            case 2:
+                cadastrarContaCliente();
+                system("pause");
+                break;
+            case 3:
+                realizarSaque();
+                system("pause");
+                break;
+            case 4:
+                realizarDeposito();
+                system("pause");
+                break;
+            case 5:
+                consultarSaldo();
+                system("pause");
+                break;
+            case 6:
+                listarClientes();
+                system("pause");
+                break;
+            case 7:
+                exibirExtrato();
+                system("pause");
+                break;
+            case 8:
+                printf("Saindo...\n");
+                break;
+            default:
+                printf("Opção inválida.\n");
+                break;
+                
+        }
+
+        printf("\n");
+    } while (opcao != 8);
+
+    return 0;
+}
