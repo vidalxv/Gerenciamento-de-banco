@@ -5,10 +5,18 @@
 
 #define MAX_CLIENTES 100
 #define MAX_CONTAS 100
+#define MAX_TRANSACOES 100
+
+typedef struct {
+    char tipo;   // 'D' para depósito, 'S' para saque
+    float valor; // Valor da transação
+} Transacao;
 
 typedef struct {
     int numeroConta;
     float saldo;
+    Transacao historico[MAX_TRANSACOES]; // Array de transações
+    int numTransacoes; // Número de transações registradas
 } Conta;
 
 typedef struct {
@@ -79,7 +87,7 @@ void realizarSaque() {
     int numeroCliente;
     printf("Digite o número do cliente: ");
     scanf("%d", &numeroCliente);
-
+    
     Cliente* cliente = buscarCliente(numeroCliente);
 
     if (cliente == NULL) {
@@ -96,9 +104,20 @@ void realizarSaque() {
         return;
     }
 
+    // Registrar a transação no histórico
+    if (cliente->conta.numTransacoes < MAX_TRANSACOES) {
+        cliente->conta.historico[cliente->conta.numTransacoes].tipo = 'S';
+        cliente->conta.historico[cliente->conta.numTransacoes].valor = valor;
+        cliente->conta.numTransacoes++;
+    } else {
+        printf("Número máximo de transações atingido.\n");
+        return;
+    }
+
     cliente->conta.saldo -= valor;
     printf("Saque realizado com sucesso. Saldo atual: %.2f\n", cliente->conta.saldo);
 }
+
 
 void realizarDeposito() {
     int numeroCliente;
@@ -117,7 +136,28 @@ void realizarDeposito() {
     scanf("%f", &valor);
 
     cliente->conta.saldo += valor;
+
+    // Registrar a transação no histórico
+    if (cliente->conta.numTransacoes < MAX_TRANSACOES) {
+        cliente->conta.historico[cliente->conta.numTransacoes].tipo = 'D';
+        cliente->conta.historico[cliente->conta.numTransacoes].valor = valor;
+        cliente->conta.numTransacoes++;
+    } else {
+        printf("Número máximo de transações atingido.\n");
+        return;
+    }
+
     printf("Deposito realizado com sucesso. Saldo atual: %.2f\n", cliente->conta.saldo);
+}
+
+// Função para registrar uma transação na conta
+void registrarTransacao(Conta *conta, Transacao transacao) {
+    if (conta->numTransacoes < MAX_TRANSACOES) {
+        conta->historico[conta->numTransacoes] = transacao;
+        conta->numTransacoes++;
+    } else {
+        printf("Limite de transações atingido.\n");
+    }
 }
 
 void consultarSaldo() {
@@ -144,7 +184,7 @@ void listarClientes() {
 
     int i;
     for (i = 0; i < numClientes; i++) {
-        printf("Número do cliente: %d\n", clientes[i].numeroCliente);
+        printf("Numero do cliente: %d\n", clientes[i].numeroCliente);
         printf("Nome: %s\n", clientes[i].nome);
         printf("Número da conta: %d\n", clientes[i].conta.numeroConta);
         printf("Saldo: %.2f\n\n", clientes[i].conta.saldo);
@@ -153,7 +193,7 @@ void listarClientes() {
 
 void exibirExtrato() {
     int numeroCliente;
-    printf("Digite o número do cliente: ");
+    printf("Digite o numero do cliente: ");
     scanf("%d", &numeroCliente);
 
     Cliente* cliente = buscarCliente(numeroCliente);
@@ -165,9 +205,24 @@ void exibirExtrato() {
 
     printf("Extrato da conta do cliente %d:\n", cliente->numeroCliente);
     printf("Saldo inicial: %.2f\n", cliente->conta.saldo);
-    printf("Operações realizadas:\n");
     
+    if (cliente->conta.numTransacoes == 0) {
+        printf("Nenhuma operacao registrada.\n");
+    } else {
+        printf("Operacoes realizadas:\n");
+
+        for (int i = 0; i < cliente->conta.numTransacoes; i++) {
+            printf("Operacao %d: ", i);
+            if (cliente->conta.historico[i].tipo == 'D') {
+                printf("Deposito de %.2f\n", cliente->conta.historico[i].valor);
+            } else if (cliente->conta.historico[i].tipo == 'S') {
+                printf("Saque de %.2f\n", cliente->conta.historico[i].valor);
+            }
+        }
+    }
 }
+
+
 
 int main() {
 	setlocale(LC_ALL, "portuguese");
@@ -179,12 +234,12 @@ int main() {
         printf("\n1. Cadastrar cliente");
         printf("\n2. Cadastrar conta de cliente");
         printf("\n3. Realizar saque");
-        printf("\n4. Realizar depósito");
+        printf("\n4. Realizar deposito");
         printf("\n5. Consultar saldo");
         printf("\n6. Listar clientes");
         printf("\n7. Exibir extrato");
         printf("\n8. Sair\n");
-        printf("\nDigite sua opção: ");
+        printf("\nDigite sua opcao: ");
         scanf("%d", &opcao);
 
         switch (opcao) {
@@ -220,7 +275,7 @@ int main() {
                 printf("Saindo...\n");
                 break;
             default:
-                printf("Opção inválida.\n");
+                printf("Opcao invalida.\n");
                 break;
                 
         }
