@@ -8,15 +8,15 @@
 #define MAX_TRANSACOES 100
 
 typedef struct {
-    char tipo;   // 'D' para depósito, 'S' para saque
-    float valor; // Valor da transação
+    char tipo; 
+    float valor;
 } Transacao;
 
 typedef struct {
     int numeroConta;
     float saldo;
-    Transacao historico[MAX_TRANSACOES]; // Array de transações
-    int numTransacoes; // Número de transações registradas
+    Transacao historico[MAX_TRANSACOES];
+    int numTransacoes;
 } Conta;
 
 typedef struct {
@@ -104,7 +104,6 @@ void realizarSaque() {
         return;
     }
 
-    // Registrar a transação no histórico
     if (cliente->conta.numTransacoes < MAX_TRANSACOES) {
         cliente->conta.historico[cliente->conta.numTransacoes].tipo = 'S';
         cliente->conta.historico[cliente->conta.numTransacoes].valor = valor;
@@ -137,7 +136,6 @@ void realizarDeposito() {
 
     cliente->conta.saldo += valor;
 
-    // Registrar a transação no histórico
     if (cliente->conta.numTransacoes < MAX_TRANSACOES) {
         cliente->conta.historico[cliente->conta.numTransacoes].tipo = 'D';
         cliente->conta.historico[cliente->conta.numTransacoes].valor = valor;
@@ -150,7 +148,6 @@ void realizarDeposito() {
     printf("Deposito realizado com sucesso. Saldo atual: %.2f\n", cliente->conta.saldo);
 }
 
-// Função para registrar uma transação na conta
 void registrarTransacao(Conta *conta, Transacao transacao) {
     if (conta->numTransacoes < MAX_TRANSACOES) {
         conta->historico[conta->numTransacoes] = transacao;
